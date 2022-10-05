@@ -7,7 +7,9 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import {
   counterInitialValue,
   CounterReducer,
-} from "../reducers/CounterReducer.js";
+} from "../reducers/counterReducer.js";
+
+
 
 const CounterReducerContainer = () => {
   const [counter, dispatchCounter] = useReducer(
