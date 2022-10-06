@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
   Typography,
   Button,
+  Avatar,
 } from '@mui/material';
 
 import { useDispatch,useSelector } from 'react-redux';
 
-import { selectUser, selectCounter} from "../feature/counter/sliceCounter.js";
+import { selectUser, selectCounter, userAsync} from "../feature/counter/sliceCounter.js";
 import {
   increment,
   decrement,
@@ -21,6 +22,7 @@ const CounterReduxContainer = () => {
   
   const user = useSelector(selectUser);
   const counter = useSelector(selectCounter);
+  const [userId, setUserId] = useState(0);
 
   const [currAmount, setCurrAmount] = useState(0);
 
@@ -54,6 +56,26 @@ const CounterReduxContainer = () => {
   const buttonDecrementByAmountOnClickHandler = () => {
     dispatcher(decrementSpec(currAmount));
   };
+  const buttonUserOnClickHandler = () => {
+    dispatcher(userAsync(userId));
+  };
+
+  
+
+  const textFieldUserIdOnChangeHandler = (e) => {
+    const valueUserId = isNaN(parseInt(e.target.value))
+      ? 0
+      : parseInt(e.target.value);
+
+    setUserId(valueUserId);
+  };
+
+  useEffect(
+    () => {
+      dispatcher(userAsync(1));
+    },
+    [dispatcher]
+  );
   
   return (
     <>
@@ -69,9 +91,33 @@ const CounterReduxContainer = () => {
         <Typography variant="body1" component="div">
           Use Redux
         </Typography>
+
+        <Avatar 
+          src={user.avatar}
+          alt={user.first_name}
+          sx={{width: 64, height: 64}}
+        />
         <Typography variant="body1" component="div">
-          Nama Orang : {user}
+          Nama Orang : {user.first_name}
         </Typography>
+
+        
+        <Box sx={{ display: "flex", gap: 2 }}>
+          <TextField
+            label="User ID"
+            size="small"
+            value={userId}
+            onChange={textFieldUserIdOnChangeHandler}
+          />
+          <Button
+            variant="contained"
+            color="info"
+            onClick={buttonUserOnClickHandler}
+            size="small"
+          >
+            Get Data User
+          </Button>
+        </Box>
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <TextField
@@ -106,7 +152,7 @@ const CounterReduxContainer = () => {
           </Button>
         </Box>
         <Box sx={{ display: "flex", gap: 2 }}>
-        <TextField
+          <TextField
             label="amount"
             size="small"
             value={currAmount}

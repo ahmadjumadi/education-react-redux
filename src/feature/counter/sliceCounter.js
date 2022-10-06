@@ -1,9 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 const initialStateForCounter = {
   user : "Jumadi",
   counter: 10000,
 };
+
+// membuat async thunk
+// nantinya variabel in akan disimpan ditemppat lain, sehinga harus di export
+
+export const userAsync = createAsyncThunk(
+  // paraameter pertamanya adalah prefix
+  // nantinya prefix ini akan membuat konstanta string
+  // "prefix/pending", "prefix/fulfilled", "prefix/rejected"
+  "counterRTK/getUserData",
+  // Payload (function handler) , sebuAH FUNGSI yang sifatnya asyncronous 
+  async (id) => {
+    // kita akan membuatkan fungsi untuk mengambil data dari server
+    // hasilnya akan mngembalikan data
+    const {data} = await axios.get(`https://reqres.in/api/users/${id}`);
+    // dalam function handler ini harus ada return
+
+    // diabawah ini adalah return untuk mengembalikan data hasil adari axios
+    return data.data;
+  }
+);
 
 const counterRTKSlice = createSlice({
   name: "counterRTK",
@@ -30,6 +51,23 @@ const counterRTKSlice = createSlice({
       state.counter -= action.payload;
     }
   },
+  // extraReducers ini aalah sebuah fungsi yang menerima sebuah parameter namanya adalah builder
+  extraReducers: (builder) => (
+    builder
+    // builder ini funya fngsi bernama addCase
+    .addCase(
+      userAsync.pending,
+      () => {
+        console.log("pending lagi nunggu data user");
+      }
+    )
+    .addCase(
+      userAsync.fulfilled,
+      (state, action) => {
+        state.user = action.payload;
+      }
+    )
+  )
 });
 
 // kita export recuders dulu
