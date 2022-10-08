@@ -18,6 +18,10 @@ import {
   reset,
 } from "../feature/counter/sliceCounter.js";
 
+import ColorList from "../components/ColorList.jsx";
+import ColorForm from "../components/ColorForm.jsx";
+
+
 const CounterReduxContainer = () => {
   
   const user = useSelector(selectUser);
@@ -174,6 +178,28 @@ const CounterReduxContainer = () => {
           >
             + Amount
           </Button>
+        </Box>
+        <Box           
+          sx={{
+            border: "1px dashed grey",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}>
+            <Typography variant="body1" component="div">List Of Color</Typography>
+          <ColorList /> 
+        </Box>
+        <Box           
+          sx={{
+            border: "1px dashed grey",
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+          }}>
+          <Typography variant="body1" component="div">Color Form</Typography>
+          <ColorForm />
         </Box>
       </Box>
     </>
